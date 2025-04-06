@@ -2,6 +2,14 @@
 
 #include <algorithm>
 
+int countDuplicates(int *arr, int start, int end, int value) {
+  int count = 0;
+  while (start + count <= end && arr[start + count] == value) {
+    ++count;
+  }
+  return count;
+}
+
 int countPairs1(int *arr, int len, int value) {
   int count = 0;
   for (int i = 0; i < len; ++i) {
@@ -11,7 +19,7 @@ int countPairs1(int *arr, int len, int value) {
       }
     }
   }
-  return (count + 1);
+  return count;
 }
 
 int countPairs2(int *arr, int len, int value) {
@@ -21,18 +29,8 @@ int countPairs2(int *arr, int len, int value) {
   while (left < right) {
     int sum = arr[left] + arr[right];
     if (sum == value) {
-      int leftCount = 1;
-      while (left + leftCount < right &&
-        arr[left + leftCount] == arr[left]) {
-        ++leftCount;
-      }
-
-      int rightCount = 1;
-      while (right - rightCount > left &&
-        arr[right - rightCount] == arr[right]) {
-        ++rightCount;
-      }
-
+      int leftCount = countDuplicates(arr, left, right, arr[left]);
+      int rightCount = countDuplicates(arr, right, left, arr[right]);
       count += leftCount * rightCount;
       left += leftCount;
       right -= rightCount;
@@ -43,7 +41,7 @@ int countPairs2(int *arr, int len, int value) {
     }
   }
 
-  return (count + 1);
+  return count;
 }
 
 int binarySearch(int *arr, int left, int right, int target) {
@@ -70,13 +68,10 @@ int countPairs3(int *arr, int len, int value) {
     int j = binarySearch(arr, i + 1, len - 1, target);
 
     if (j != -1) {
-      int k = j;
-      while (k + 1 < len && arr[k + 1] == target) {
-        ++k;
-      }
-      count += (k - j + 1);
+      int duplicates = countDuplicates(arr, j, len - 1, target);
+      count += duplicates;
     }
   }
 
-  return (count + 1);
+  return count;
 }
