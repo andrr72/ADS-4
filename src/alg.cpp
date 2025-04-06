@@ -1,13 +1,12 @@
 // Copyright 2025 NNTU-CS
-
 #include <algorithm>
 
 int countDuplicates(int *arr, int start, int end, int value) {
-    int count = 0;
-    for (int i = start; i <= end && arr[i] == value; ++i) {
-        ++count;
-    }
-    return count;
+  int count = 0;
+  for (int i = start; i <= end && arr[i] == value; ++i) {
+    ++count;
+  }
+  return count;
 }
 
 int countPairs1(int *arr, int len, int value) {
@@ -36,6 +35,36 @@ int binarySearch(int *arr, int left, int right, int target) {
   return -1;
 }
 
+int countPairsForTarget(int *arr, int len, int value) {
+  int count = 0;
+  int left = 0, right = len - 1;
+
+  while (left < right) {
+    int sum = arr[left] + arr[right];
+    if (sum == value) {
+      int leftCount = 1;
+      while (left + leftCount < right && arr[left + leftCount] == arr[left]) {
+        ++leftCount;
+      }
+
+      int rightCount = 1;
+      while (right - rightCount > left && arr[right - rightCount] == arr[right]) {
+        ++rightCount;
+      }
+
+      count += leftCount * rightCount;
+      left += leftCount;
+      right -= rightCount;
+    } else if (sum < value) {
+      ++left;
+    } else {
+      --right;
+    }
+  }
+
+  return count;
+}
+
 int countPairs2(int *arr, int len, int value) {
   int count = 0;
 
@@ -55,23 +84,5 @@ int countPairs2(int *arr, int len, int value) {
 }
 
 int countPairs3(int *arr, int len, int value) {
-  int count = 0;
-  int left = 0, right = len - 1;
-
-  while (left < right) {
-    int sum = arr[left] + arr[right];
-    if (sum == value) {
-      int leftCount = countDuplicates(arr, left, right, arr[left]);
-      int rightCount = countDuplicates(arr, right, left, arr[right]);
-      count += leftCount * rightCount;
-      left += leftCount;
-      right -= rightCount;
-    } else if (sum < value) {
-      ++left;
-    } else {
-      --right;
-    }
-  }
-
-  return count;
+  return countPairsForTarget(arr, len, value);
 }
