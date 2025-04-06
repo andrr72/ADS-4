@@ -36,8 +36,7 @@ int findFirstOccurrence(int* array, int left, int right, int target) {
     int mid = left + (right - left) / 2;
     if (array[mid] >= target) {
       right = mid - 1;
-    } 
-    else {
+    } else {
       left = mid + 1;
     }
   }
@@ -49,8 +48,7 @@ int findLastOccurrence(int* array, int left, int right, int target) {
     int mid = left + (right - left) / 2;
     if (array[mid] <= target) {
       left = mid + 1;
-    } 
-    else {
+    } else {
       right = mid - 1;
     }
   }
