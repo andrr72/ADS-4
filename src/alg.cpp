@@ -30,7 +30,6 @@ int countPairs2(int *arr, int len, int value) {
             while (right - rightCount > left && arr[right - rightCount] == arr[right]) {
                 ++rightCount;
             }
-
             count += leftCount * rightCount;
             left += leftCount;
             right -= rightCount;
