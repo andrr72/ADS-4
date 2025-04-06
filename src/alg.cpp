@@ -3,11 +3,11 @@
 #include <algorithm>
 
 int countDuplicates(int *arr, int start, int end, int value) {
-  int count = 0;
-  while (start + count <= end && arr[start + count] == value) {
-    ++count;
-  }
-  return count;
+    int count = 0;
+    for (int i = start; i <= end && arr[i] == value; ++i) {
+        ++count;
+    }
+    return count;
 }
 
 int countPairs1(int *arr, int len, int value) {
