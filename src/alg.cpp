@@ -1,88 +1,75 @@
 // Copyright 2025 NNTU-CS
-#include <algorithm>
 
-int countDuplicates(int *arr, int start, int end, int value) {
-  int count = 0;
-  for (int i = start; i <= end && arr[i] == value; ++i) {
-    ++count;
-  }
-  return count;
-}
-
-int countPairs1(int *arr, int len, int value) {
-  int count = 0;
-  for (int i = 0; i < len; ++i) {
-    for (int j = i + 1; j < len; ++j) {
-      if (arr[i] + arr[j] == value) {
-        ++count;
+int countPairs1(int* array, int size, int target) {
+  int pairCount = 0;
+  for (int i = 0; i < size; ++i) {
+    for (int j = i + 1; j < size; ++j) {
+      if (array[i] + array[j] == target) {
+        ++pairCount;
       }
     }
   }
-  return count;
+  return pairCount;
 }
 
-int binarySearch(int *arr, int left, int right, int target) {
+int countPairs2(int* array, int size, int target) {
+  int pairCount = 0;
+
+  int upperBound = size - 1;
+  while (upperBound > 0 && array[upperBound] > target) {
+    --upperBound;
+  }
+
+  for (int i = 0; i < size; ++i) {
+    for (int j = upperBound; j > i; --j) {
+      if (array[i] + array[j] == target) {
+        ++pairCount;
+      }
+    }
+  }
+
+  return pairCount;
+}
+
+int findFirstOccurrence(int* array, int left, int right, int target) {
   while (left <= right) {
     int mid = left + (right - left) / 2;
-    if (arr[mid] == target) {
-      return mid;
-    } else if (arr[mid] < target) {
+    if (array[mid] >= target) {
+      right = mid - 1;
+    } 
+    else {
       left = mid + 1;
-    } else {
+    }
+  }
+  return left;
+}
+
+int findLastOccurrence(int* array, int left, int right, int target) {
+  while (left <= right) {
+    int mid = left + (right - left) / 2;
+    if (array[mid] <= target) {
+      left = mid + 1;
+    } 
+    else {
       right = mid - 1;
     }
   }
-  return -1;
+  return right;
 }
 
-int countPairsForTarget(int *arr, int len, int value) {
-  int count = 0;
-  int left = 0, right = len - 1;
+int countPairs3(int* array, int size, int target) {
+  int pairCount = 0;
 
-  while (left < right) {
-    int sum = arr[left] + arr[right];
-    if (sum == value) {
-      int leftCount = 1;
-      while (left + leftCount < right && arr[left + leftCount] == arr[left]) {
-        ++leftCount;
-      }
+  for (int i = 0; i < size; ++i) {
+    int complement = target - array[i];
 
-      int rightCount = 1;
-      while (right - rightCount > left && arr[right - rightCount] == arr[right]) {
-        ++rightCount;
-      }
+    int start = findFirstOccurrence(array, i + 1, size - 1, complement);
+    int end = findLastOccurrence(array, i + 1, size - 1, complement);
 
-      count += leftCount * rightCount;
-      left += leftCount;
-      right -= rightCount;
-    } else if (sum < value) {
-      ++left;
-    } else {
-      --right;
+    if (start <= end) {
+      pairCount += end - start + 1;
     }
   }
 
-  return count;
-}
-
-int countPairs2(int *arr, int len, int value) {
-  int count = 0;
-
-  for (int i = 0; i < len; ++i) {
-    int target = value - arr[i];
-    if (target < 0) break;
-
-    int j = binarySearch(arr, i + 1, len - 1, target);
-
-    if (j != -1) {
-      int duplicates = countDuplicates(arr, j, len - 1, target);
-      count += duplicates;
-    }
-  }
-
-  return count;
-}
-
-int countPairs3(int *arr, int len, int value) {
-  return countPairsForTarget(arr, len, value);
+  return pairCount;
 }
